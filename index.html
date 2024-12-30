@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - OTTOVOX</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="login.css">
+    <!-- <script type="module" src="login.js" defer></script> -->
+</head>
+
+<body>
+    <!-- Background Overlay -->
+    <div class="background-overlay"></div>
+
+    <!-- Main Container -->
+    <div class="login-container">
+        <div class="login-header">
+            <h1>OTTOVOX</h1>
+            <p class="subheading">Your gateway to the future of OTT streaming</p>
+        </div>
+            <button type="button" id="google-login" class="google-login-button">
+                Login with Google
+            </button>
+    </div>
+    <script type="module">
+        // Import the necessary Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPVKX0xD12qUuZUsVMJML3ziYmM_zG27U",
+    authDomain: "hardware-c4141.firebaseapp.com",
+    projectId: "hardware-c4141",
+    storageBucket: "hardware-c4141.appspot.com",
+    messagingSenderId: "952737919097",
+    appId: "1:952737919097:web:4fc7c24e916a2106d5a4a8",
+    measurementId: "G-NSLYTPT3NC"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Google Authentication
+        const googleButton = document.getElementById('google-login');
+        googleButton.addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                alert(`Welcome, ${user.displayName}!`);
+                // Redirect or perform actions after login
+                window.location.href = "home.html";
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('Login failed. Please try again.');
+            }
+        });
+    </script>
+</body>
+
+</html>
