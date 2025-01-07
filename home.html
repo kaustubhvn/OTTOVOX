@@ -1,83 +1,108 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Interactive Key Controls</title>
-        <link rel="icon" href="icon.png" type="image/x-icon">
-        <link rel="stylesheet" href="home.css">
-        <script type="text/javascript" src="https://sketchfab.com/static/js/embed.js"></script>
-    </head>
-    <body>
-        <div class="navbar">
-            <h1>OTTOVOX</h1>
-            <div class="links">
-                <a href="home.html">Home</a>
-                <a href="members.html">Members</a>
-                <a href="project.html">Project Details</a>
-            </div>
-            <div class="mode-switch">Light Mode</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Key Controls</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="home.css">
+    <script type="text/javascript" src="https://sketchfab.com/static/js/embed.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <h1>OTTOVOX</h1>
+        <div class="links">
+            <a href="home.html">Home</a>
+            <a href="members.html">Members</a>
+            <a href="project.html">Project Details</a>
         </div>
-        <div class="main-container">
-            <!-- Left Container -->
-            <div class="left-container">
-                <div class="box">
-                    <h2>Camera View</h2>
-                    <div class="camera-view">Camera Feed</div>
-                </div>
-                <div class="box">
-                    <h2>Control Panel</h2>
-                    <div class="control-panel">
-                        <button class="key" id="left">←</button>
-                        <button class="key" id="up">↑</button>
-                        <button class="key" id="right">→</button>
-                        <button class="key" id="down">↓</button>
-                        <button class="key" id="space">Blink</button>
-                    </div>
+        <div class="mode-switch">Light Mode</div>
+    </div>
+    <div class="main-container">
+        <!-- Left Container -->
+        <div class="left-container">
+            <div class="box">
+                <h2>Camera View</h2>
+                <div class="camera-view">
+                    <img id="camera-feed" 
+                         src="http://192.168.232.43/stream" 
+                         alt="Camera Feed" 
+                         style="width: 100%; height: auto;" 
+                         crossorigin="anonymous" 
+                         onerror="this.src='fallback.jpg'; alert('Camera feed not available.');">
                 </div>
             </div>
+            <div class="box">
+                <h2>Control Panel</h2>
+                <div class="control-panel">
+                    <button class="key" id="left">←</button>
+                    <button class="key" id="up">↑</button>
+                    <button class="key" id="right">→</button>
+                    <button class="key" id="down">↓</button>
+                    <button class="key" id="space">Blink</button>
+                </div>
+            </div>
+        </div>
 
-            <!-- Center 3D Model Box -->
-            <div class="center-container">
-                <div class="model-box">
-                    <h2>Interactive 3D Model</h2>
-                    <div id="3d-model"></div>
-                </div>
-            </div>
-            
-            <!-- Right Container -->
-            <div class="right-container">
-                <div class="chat-box">
-                    <div class="chat-header">Chat With OTTOVOX</div>
-                    <div class="chat-body" id="chat-body">
-                        <div class="message bot">Welcome to OTTOVOX Chat! How can I assist you?</div>
-                    </div>
-                    <div class="chat-footer">
-                        <input type="text" id="chat-input" placeholder="Type your message...">
-                        <button id="send-btn">Send</button>
-                    </div>
-                </div>
+        <!-- Center 3D Model Box -->
+        <div class="center-container">
+            <div class="model-box">
+                <h2>Interactive 3D Model</h2>
+                <div id="3d-model"></div>
             </div>
         </div>
         
-        <script type="text/javascript">
-            var iframe = document.createElement('iframe');
-            iframe.src = "https://sketchfab.com/models/9ee2e82650614df6affaf69806973342/embed";
-            iframe.width = '100%';
-            iframe.height = '100%';
-            iframe.frameBorder = '0';
-            iframe.allowFullscreen = true;
+        <!-- Right Container -->
+        <div class="right-container">
+            <div class="chat-box">
+                <div class="chat-header">Chat With OTTOVOX</div>
+                <div class="chat-body" id="chat-body">
+                    <div class="message bot">Welcome to OTTOVOX Chat! How can I assist you?</div>
+                </div>
+                <div class="chat-footer">
+                    <input type="text" id="chat-input" placeholder="Type your message...">
+                    <button id="send-btn">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        const cameraFeed = document.getElementById('camera-feed');
+    
+        // Check if the ESP32 stream is accessible
+        fetch(cameraFeed.src, { method: 'HEAD' })
+          .then((response) => {
+            if (!response.ok) {
+              alert('Camera feed not available. Check ESP32 connection!');
+              cameraFeed.style.display = 'none'; // Hide the feed if not available
+            }
+          })
+          .catch((error) => {
+            console.error('Error connecting to the ESP32:', error);
+            alert('Camera feed not available. Check ESP32 connection!');
+            cameraFeed.style.display = 'none'; // Hide the feed if not available
+          });
+    </script>
 
-            document.getElementById('3d-model').appendChild(iframe);
+    <script type="text/javascript">
+        // Load Sketchfab 3D Model
+        var iframe = document.createElement('iframe');
+        iframe.src = "https://sketchfab.com/models/9ee2e82650614df6affaf69806973342/embed";
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.frameBorder = '0';
+        iframe.allowFullscreen = true;
 
-            
-            const modeSwitchButton = document.querySelector('.mode-switch');
-            modeSwitchButton.addEventListener('click', () => {
+        document.getElementById('3d-model').appendChild(iframe);
+
+        // Toggle Light/Dark Mode
+        const modeSwitchButton = document.querySelector('.mode-switch');
+        modeSwitchButton.addEventListener('click', () => {
             document.body.classList.toggle('light-mode');
-});
-
-        </script>
-        
-        <script src="home.js"></script>
-    </body>
-    </html>
+        });
+    </script>
+    
+    <script src="home.js"></script>
+</body>
+</html>

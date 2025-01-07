@@ -116,7 +116,8 @@ h1, h2 {
 }
 
 .camera-view {
-    height: 200px;
+    height: 240px;
+    width: 320px;
     border: 2px dashed #4caf50;
     border-radius: 10px;
     display: flex;
